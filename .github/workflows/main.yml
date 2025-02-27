@@ -1,0 +1,57 @@
+name: hello-world
+
+on: 
+  push:
+    branches:
+      - main  # ya apne branch ka naam, jahan aap push kar rahe ho
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js (agar aap Node.js use kar rahe hain)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Build project
+        run: |
+          npm run build   # Apni build script jo aapke project mein ho, usse run karein
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build  # Yeh step sirf build ke baad chalega
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js (agar aap Node.js use kar rahe hain)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Run tests
+        run: |
+          npm test    # Agar aap tests likhe hain toh, wo yahan run hoga
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test   # Yeh step sirf test ke baad chalega
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy application
+        run: |
+          echo "Deploying to production server..."  # Yahan apna deploy script ya command daalein
